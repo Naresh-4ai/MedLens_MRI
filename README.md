@@ -550,9 +550,6 @@ Possible future versions of MedLens may include:
 - Retrieval evaluation and benchmarking
 - Improved medical document processing
 
-## 👨‍💻 Author
-
-**Jujare Naresh**
 
 MedLens is an AI/GenAI project exploring medical document intelligence, RAG, vector databases, knowledge graphs, and conversational AI.
 

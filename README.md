@@ -1,49 +1,42 @@
-## 🩺 MedLens — Medical Report Intelligence
+# 🩺 MedLens — Medical Report Intelligence
 
-> *“See every patient's history through one intelligent lens.”*
+> **“See every patient's history through one intelligent lens.”**
 
 **MedLens** is a prototype medical document intelligence and doctor-assistance system designed to bring a patient's scattered medical records together into one intelligent view.
 
-Built with **Python, LangGraph, OpenAI, Qdrant, Neo4j, and Streamlit**, MedLens processes multiple medical documents, extracts clinically relevant information, builds a chronological view of the patient's history, and combines **semantic retrieval with a medical knowledge graph** to help doctors quickly understand the patient's records.
+Built with **Python, LangGraph, OpenAI, Qdrant, Neo4j, and Streamlit**, MedLens processes multiple medical documents, extracts relevant medical information, builds a chronological view of the patient's history, and combines **semantic retrieval with a medical knowledge graph** to help doctors understand patient records more efficiently.
 
-Instead of treating every report as an isolated PDF, MedLens connects information across **prescriptions, laboratory reports, discharge summaries, radiology reports, consultation notes, medical certificates, and other patient documents**. This allows the doctor to explore a patient's history through a conversational assistant rather than manually searching through every document.
-
-### Prototype
-
-MedLens is currently a **prototype / research-oriented project** focused on exploring how **Agentic AI, RAG, vector databases, and knowledge graphs** can work together to make longitudinal medical records easier to understand and retrieve.
-
-The goal is not to replace existing clinical systems or medical professionals, but to demonstrate how an intelligent layer can sit on top of a patient's existing records and provide **context-aware access to medical history**.
-
-> ⚠️ **Medical Disclaimer:** MedLens is an AI-assisted medical-record retrieval and summarization prototype. It is not a medical device or a substitute for professional clinical judgment. It does not diagnose diseases, prescribe medication, recommend treatment, or make independent clinical decisions.
-
-
-------------------------------------------------------------------------
+Instead of treating every report as an isolated document, MedLens connects information across **prescriptions, laboratory reports, discharge summaries, radiology reports, consultation notes, medical certificates, and other patient records**. Doctors can then explore the patient's history through a conversational assistant rather than manually searching through every document.
 
 ## ✨ Features
 
--   📄 Upload multiple medical records
--   🗂️ Classify medical documents
--   🔍 Extract text from medical documents
--   🧠 Extract structured medical information
--   📅 Generate a chronological medical timeline
--   🧬 Store patient relationships in Neo4j
--   🔎 Store semantic medical information in Qdrant
--   💬 Ask questions about the patient's medical records
--   🤖 Use GPT-4.1-mini for medical-record-based responses
--   📊 Display a patient dashboard in Streamlit
--   🔐 Keep the system based only on uploaded patient records
+- 📄 Upload multiple patient medical records
+- 🗂️ Classify different medical document types
+- 🔍 Extract text from PDFs and medical images
+- 🧠 Extract structured medical information
+- 📅 Generate a chronological medical timeline
+- 🔎 Store and retrieve medical information using Qdrant
+- 🧬 Represent patient relationships using Neo4j
+- 💬 Ask questions about uploaded patient records
+- 🤖 Use GPT-4.1-mini for medical-record-based responses
+- 📊 Display extracted information through a Streamlit dashboard
+- ⚡ Keep document processing separate from doctor chat for faster queries
 
-------------------------------------------------------------------------
+## 🧪 Prototype
+
+MedLens is currently a **prototype / research-oriented project** exploring how **Agentic AI, RAG, vector databases, and knowledge graphs** can work together to make longitudinal medical records easier to understand and retrieve.
+
+The prototype focuses on building an intelligent layer over existing patient records. It is not intended to replace hospital information systems, electronic health record platforms, or medical professionals.
+
+The current architecture separates **document ingestion** from **doctor conversation**. Medical records are processed and stored once; subsequent doctor questions retrieve relevant information from the existing knowledge base instead of re-running the complete document-processing pipeline.
 
 ## 🏗️ Architecture
 
-MedLens uses two separate flows.
-
 ### 1. Medical Record Processing
 
-This flow runs when the doctor uploads and analyzes medical records.
+When records are uploaded and analyzed, MedLens processes them through a LangGraph workflow:
 
-``` text
+```text
 Medical Documents
        │
        ▼
@@ -62,19 +55,17 @@ Timeline Agent
 Knowledge Base Agent
        │
        ├──────────────► Qdrant
-       │                Semantic Medical Data
+       │                Semantic Medical Memory
        │
        └──────────────► Neo4j
                         Patient Relationships
 ```
 
-The processing graph is handled by LangGraph.
+### 2. Doctor Assistant
 
-### 2. Doctor Chat
+After the records have been processed, the doctor chat uses only the retrieval and reasoning path:
 
-The doctor chat does **not** run the entire LangGraph again.
-
-``` text
+```text
 Doctor Question
        │
        ▼
@@ -93,341 +84,26 @@ MRI Agent
           Doctor's Answer
 ```
 
-This separation keeps the chat considerably faster because document
-processing and database storage happen once.
-
-------------------------------------------------------------------------
-
-## 🧰 Technologies Used
-
-  Technology               Purpose
-  ------------------------ ---------------------------------------------------------
-  Python                   Main programming language
-  Streamlit                Web interface
-  LangGraph                Medical document processing workflow
-  OpenAI API               Document understanding, extraction, embeddings and chat
-  GPT-4.1-mini             Classification, extraction and doctor assistant
-  text-embedding-3-small   Medical text embeddings
-  Qdrant                   Vector database / semantic retrieval
-  Neo4j                    Medical knowledge graph / relationships
-  Docker                   Running Qdrant and Neo4j
-  python-dotenv            Environment variable management
-
-------------------------------------------------------------------------
-
-# 🚀 Getting Started
-
-## 1. Clone the repository
-
-``` bash
-git clone <your-repository-url>
-cd MedLens_MRI
-```
-
-------------------------------------------------------------------------
-
-## 2. Install Docker
-
-MedLens requires Docker because **Qdrant and Neo4j run as services**.
-
-Install Docker Desktop:
-
-https://www.docker.com/products/docker-desktop/
-
-Make sure Docker Desktop is running before starting MedLens.
-
-------------------------------------------------------------------------
-
-## 3. Start Qdrant
-
-Run:
-
-``` bash
-docker run -d \
-  --name medlens-qdrant \
-  -p 6333:6333 \
-  qdrant/qdrant
-```
-
-Qdrant will be available at:
-
-``` text
-http://localhost:6333
-```
-
-------------------------------------------------------------------------
-
-## 4. Start Neo4j
-
-Run:
-
-``` bash
-docker run -d \
-  --name medlens-neo4j \
-  -p 7474:7474 \
-  -p 7687:7687 \
-  -e NEO4J_AUTH=neo4j/password \
-  neo4j
-```
-
-Neo4j Browser will be available at:
-
-``` text
-http://localhost:7474
-```
-
-Neo4j Bolt connection:
-
-``` text
-bolt://localhost:7687
-```
-
-Credentials:
-
-``` text
-Username: neo4j
-Password: password
-```
-
-------------------------------------------------------------------------
-
-# 🐍 5. Create a Python Virtual Environment
-
-It is recommended to run MedLens inside a virtual environment.
-
-### Windows
-
-``` bash
-python -m venv venv
-```
-
-Activate it:
-
-``` bash
-venv\Scripts\activate
-```
-
-You should see something similar to:
-
-``` text
-(venv)
-```
-
-before your terminal prompt.
-
-### Linux / macOS
-
-``` bash
-python3 -m venv venv
-```
-
-Activate it:
-
-``` bash
-source venv/bin/activate
-```
-
-------------------------------------------------------------------------
-
-# 📦 6. Install Dependencies
-
-With the virtual environment activated:
-
-``` bash
-pip install -r requirements.txt
-```
-
-If you do not have a `requirements.txt` yet, install the required
-packages according to the project's dependency configuration.
-
-------------------------------------------------------------------------
-
-# 🔑 7. Create the `.env` File
-
-Create a file named:
-
-``` text
-.env
-```
-
-in the root directory of the project.
-
-Add:
-
-``` env
-OPENAI_API_KEY=your_openai_api_key
-
-QDRANT_HOST=localhost
-QDRANT_PORT=6333
-
-NEO4J_URI=bolt://localhost:7687
-NEO4J_USERNAME=neo4j
-NEO4J_PASSWORD=password
-```
-
-Replace:
-
-``` text
-your_openai_api_key
-```
-
-with your actual OpenAI API key.
-
-### ⚠️ Do not commit `.env`
-
-Make sure `.env` is included in `.gitignore`.
-
-Example:
-
-``` gitignore
-.env
-venv/
-__pycache__/
-uploads/
-```
-
-------------------------------------------------------------------------
-
-# ▶️ 8. Run MedLens
-
-Make sure:
-
--   Docker Desktop is running
--   Qdrant container is running
--   Neo4j container is running
--   Virtual environment is activated
--   `.env` is configured
-
-Then run:
-
-``` bash
-streamlit run app.py
-```
-
-Streamlit will provide a local address, normally:
-
-``` text
-http://localhost:8501
-```
-
-Open it in your browser.
-
-------------------------------------------------------------------------
-
-# 🩺 Using MedLens
-
-## Step 1 --- Upload Medical Records
-
-Upload one or multiple:
-
-``` text
-PDF
-PNG
-JPG
-JPEG
-```
-
-medical records.
-
-Examples:
-
--   Prescriptions
--   Lab reports
--   Discharge summaries
--   Radiology reports
--   Clinical notes
--   Medical certificates
--   Insurance documents
-
-------------------------------------------------------------------------
-
-## Step 2 --- Analyze Records
-
-Click:
-
-``` text
-Analyze Records
-```
-
-MedLens processes the uploaded records through the LangGraph pipeline.
-
-The extracted information is then stored in:
-
-### Qdrant
-
-For semantic retrieval.
-
-### Neo4j
-
-For relationships between:
-
-``` text
-Patient
-│
-├── Diagnosis
-├── Medication
-├── Medical Test
-├── Doctor
-├── Hospital
-└── Document
-```
-
-------------------------------------------------------------------------
-
-## Step 3 --- View Patient Dashboard
-
-The dashboard displays information extracted from the patient's records,
-including:
-
--   Patient name
--   Age
--   Gender
--   Hospital
--   Doctor
--   Medical history
--   Allergies
--   Diagnoses
--   Medications
--   Laboratory results
--   Medical timeline
--   Uploaded medical documents
-
-------------------------------------------------------------------------
-
-## Step 4 --- Ask the Doctor Assistant
-
-After the records have been processed, use:
-
-``` text
-Doctor Assistant
-```
-
-to ask questions such as:
-
-``` text
-What diagnoses does this patient have?
-
-What medications is the patient currently taking?
-
-What was the patient's previous medical history?
-
-Show me the patient's laboratory findings.
-
-When was hypertension first documented?
-
-What happened during the patient's previous hospital admission?
-
-What medications were prescribed for diabetes?
-```
-
-The MRI agent retrieves relevant information from Qdrant and Neo4j
-before sending the context to GPT-4.1-mini.
-
-------------------------------------------------------------------------
-
-# 🗃️ Project Structure
-
-``` text
+This prevents every doctor question from triggering classification, OCR, medical information extraction, timeline generation, and database ingestion again.
+
+## 🧰 Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| Python | Core programming language |
+| Streamlit | Web interface and dashboard |
+| LangGraph | Agent workflow orchestration |
+| OpenAI API | Document understanding, extraction, embeddings and chat |
+| GPT-4.1-mini | Classification, extraction and doctor assistant |
+| text-embedding-3-small | Medical text embeddings |
+| Qdrant | Vector database and semantic retrieval |
+| Neo4j | Medical knowledge graph and relationships |
+| Docker | Running Qdrant and Neo4j |
+| python-dotenv | Environment variable management |
+
+## 📁 Project Structure
+
+```text
 MedLens_MRI/
 │
 ├── Agents/
@@ -449,47 +125,274 @@ MedLens_MRI/
 ├── uploads/
 │
 ├── app.py
+├── docker-compose.yml
 ├── requirements.txt
 ├── .env
 └── README.md
 ```
 
-------------------------------------------------------------------------
+## 🚀 Getting Started
 
-# 🧠 Why Qdrant + Neo4j?
+### Prerequisites
 
-MedLens uses two different types of medical memory.
+Before running MedLens, install:
 
-## Qdrant --- Semantic Memory
+- Python 3.11+
+- Docker Desktop
+- Git
+- An OpenAI API key
 
-Qdrant stores vector embeddings of relevant medical information.
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Naresh-4ai/MedLens_MRI.git
+cd MedLens_MRI
+```
+
+### 2. Start Docker
+
+MedLens uses Docker to run **Qdrant** and **Neo4j**.
+
+Make sure Docker Desktop is installed and running.
+
+Start both services:
+
+```bash
+docker compose up -d
+```
+
+Check that they are running:
+
+```bash
+docker ps
+```
+
+You should see containers for:
+
+```text
+medlens_qdrant
+medlens_neo4j
+```
+
+### 3. Qdrant
+
+Qdrant is exposed on:
+
+```text
+http://localhost:6333
+```
+
+Default configuration:
+
+```text
+QDRANT_HOST=localhost
+QDRANT_PORT=6333
+```
+
+### 4. Neo4j
+
+Neo4j Browser:
+
+```text
+http://localhost:7474
+```
+
+Bolt connection:
+
+```text
+bolt://localhost:7687
+```
+
+Default credentials:
+
+```text
+Username: neo4j
+Password: password
+```
+
+### 5. Create a Python virtual environment
+
+#### Windows
+
+```powershell
+python -m venv venv
+```
+
+Activate it:
+
+```powershell
+venv\Scripts\activate
+```
+
+#### Linux / macOS
+
+```bash
+python3 -m venv venv
+```
+
+Activate it:
+
+```bash
+source venv/bin/activate
+```
+
+### 6. Install dependencies
+
+With the virtual environment activated:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 7. Configure environment variables
+
+Create a `.env` file in the project root:
+
+```env
+OPENAI_API_KEY=your_openai_api_key
+
+QDRANT_HOST=localhost
+QDRANT_PORT=6333
+
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=password
+```
+
+Replace `your_openai_api_key` with your actual OpenAI API key.
+
+**Never commit your `.env` file or expose your API key publicly.**
+
+### 8. Run MedLens
+
+Make sure:
+
+- Docker Desktop is running
+- Qdrant is running
+- Neo4j is running
+- The Python virtual environment is activated
+- `.env` is configured
+
+Then run:
+
+```bash
+streamlit run app.py
+```
+
+Open the Streamlit URL shown in the terminal, normally:
+
+```text
+http://localhost:8501
+```
+
+## 🩺 Using MedLens
+
+### Step 1 — Upload Records
+
+Upload one or multiple medical records.
+
+Supported formats:
+
+```text
+PDF
+PNG
+JPG
+JPEG
+```
+
+Examples include:
+
+- Prescriptions
+- Lab reports
+- Discharge summaries
+- Radiology reports
+- Clinical notes
+- Medical certificates
+- Insurance documents
+
+### Step 2 — Analyze Records
+
+Click:
+
+```text
+Analyze Records
+```
+
+MedLens processes the uploaded documents through the LangGraph pipeline.
+
+The extracted information is then stored in the knowledge base.
+
+### Step 3 — Patient Dashboard
+
+The dashboard presents information extracted from the records, including:
+
+- Patient name
+- Age
+- Gender
+- Hospital
+- Doctor
+- Medical history
+- Allergies
+- Diagnoses
+- Medications
+- Laboratory results
+- Medical timeline
+- Uploaded medical documents
+
+### Step 4 — Doctor Assistant
+
+After processing, use the **Doctor Assistant** to ask questions about the patient's records.
+
+Examples:
+
+```text
+What diagnoses does this patient have?
+
+What medications is the patient taking?
+
+What is the patient's previous medical history?
+
+Show me the patient's laboratory findings.
+
+When was hypertension first documented?
+
+What happened during the previous hospital admission?
+
+What medications were documented for diabetes?
+```
+
+The MRI agent retrieves relevant information from Qdrant and patient context from Neo4j before sending the available evidence to GPT-4.1-mini.
+
+## 🧠 Why Qdrant + Neo4j?
+
+MedLens uses two complementary forms of medical memory.
+
+### Qdrant — Semantic Memory
+
+Qdrant stores vector embeddings of medical text for semantic retrieval.
 
 For example:
 
-``` text
+```text
 Patient's prescription:
 Metformin 500 mg twice daily
 ```
 
-A doctor can ask:
+A doctor could ask:
 
-``` text
+```text
 What medication is the patient taking for diabetes?
 ```
 
-The wording does not need to exactly match the stored text.
+The wording does not need to exactly match the original document. Semantic retrieval can identify relevant information based on meaning.
 
-Qdrant retrieves semantically relevant information.
+### Neo4j — Relationship Memory
 
-------------------------------------------------------------------------
+Neo4j represents relationships between medical entities.
 
-## Neo4j --- Relationship Memory
+For example:
 
-Neo4j stores relationships between medical entities.
-
-Example:
-
-``` text
+```text
 Patient
    │
    ├── HAS_DIAGNOSIS ──► Diabetes
@@ -501,183 +404,158 @@ Patient
    └── HAS_DOCUMENT ───► Prescription
 ```
 
-This provides relationship and patient context that a basic vector
-database alone cannot represent as naturally.
+This allows MedLens to maintain relationships between patients, diagnoses, medications, tests, doctors, hospitals, and documents.
 
-------------------------------------------------------------------------
+## ⚡ Performance Design
 
-# ⚡ Performance Design
+MedLens intentionally separates **document processing** from **doctor chat**.
 
-MedLens intentionally separates **document ingestion** from **doctor
-chat**.
+### Document Processing
 
-### Document processing
-
-Expensive operations such as:
-
-``` text
+```text
 Classification
-OCR
+     ↓
+OCR / Document Reading
+     ↓
 Medical Information Extraction
+     ↓
 Timeline Generation
-Database Storage
+     ↓
+Knowledge Base Storage
 ```
 
-run when the doctor analyzes the records.
+### Doctor Chat
 
-### Doctor chat
-
-After processing, the chat does not run those agents again.
-
-Instead:
-
-``` text
-Question
-   ↓
+```text
+Doctor Question
+      ↓
 MRI Agent
-   ↓
+      ↓
 Qdrant + Neo4j
-   ↓
-GPT
-   ↓
+      ↓
+GPT-4.1-mini
+      ↓
 Answer
 ```
 
-This avoids unnecessarily reprocessing the patient's documents for every
-question.
+The document-processing agents are therefore not unnecessarily executed for every question.
 
-------------------------------------------------------------------------
+## 🔒 Medical Safety
 
-# 🔒 Medical Safety
+MedLens is an AI-assisted medical-record retrieval and summarization prototype.
 
-MedLens is designed as a medical-record intelligence assistant.
+The system is designed to:
 
-It should:
+- Use information from uploaded records
+- Clearly state when information is unavailable
+- Avoid inventing patient information
+- Avoid diagnosing diseases
+- Avoid prescribing medication
+- Avoid recommending treatment
+- Avoid making unsupported assumptions
 
--   Use information from uploaded records
--   Clearly state when information is unavailable
--   Avoid inventing patient information
--   Avoid diagnosing diseases
--   Avoid prescribing medications
--   Avoid recommending treatments
--   Avoid making unsupported assumptions
+> **Medical Disclaimer:** MedLens is a prototype for educational, research, and demonstration purposes. It is not a medical device and is not a substitute for qualified clinical judgment. Do not use MedLens as the sole basis for diagnosis, medication changes, treatment decisions, or other clinical decisions.
 
-MedLens is **not a replacement for a qualified medical professional**.
+## 🛠️ Troubleshooting
 
-------------------------------------------------------------------------
+### Qdrant Connection Error
 
-# 🛠️ Troubleshooting
+Check Docker:
 
-## Qdrant connection error
-
-Check that Docker is running:
-
-``` bash
+```bash
 docker ps
 ```
 
-You should see the Qdrant container.
+If the container is stopped:
 
-If it is stopped:
-
-``` bash
-docker start medlens-qdrant
+```bash
+docker start medlens_qdrant
 ```
 
-------------------------------------------------------------------------
+Or start the complete stack:
 
-## Neo4j connection error
+```bash
+docker compose up -d
+```
+
+Qdrant should be available at:
+
+```text
+http://localhost:6333
+```
+
+### Neo4j Connection Error
 
 Check:
 
-``` bash
+```bash
 docker ps
 ```
 
-Start the container if necessary:
+If the container is stopped:
 
-``` bash
-docker start medlens-neo4j
+```bash
+docker start medlens_neo4j
 ```
 
-Neo4j should be available on:
+Neo4j should be available at:
 
-``` text
+```text
 bolt://localhost:7687
 ```
 
-------------------------------------------------------------------------
+If Neo4j has just been started, wait several seconds for the database to finish initializing.
 
-## Python package error
+### Python Package Error
 
-Make sure the virtual environment is activated:
+Make sure the virtual environment is activated.
 
-### Windows
+Windows:
 
-``` bash
+```powershell
 venv\Scripts\activate
 ```
 
 Then:
 
-``` bash
+```bash
 pip install -r requirements.txt
 ```
 
-------------------------------------------------------------------------
-
-## OpenAI API error
+### OpenAI API Error
 
 Check that `.env` contains:
 
-``` env
+```env
 OPENAI_API_KEY=your_openai_api_key
 ```
 
-Restart Streamlit after changing `.env`.
+Restart Streamlit after changing the environment variables.
 
-------------------------------------------------------------------------
+## 🚧 Future Improvements
 
-# 🚧 Future Improvements
+Possible future versions of MedLens may include:
 
-Potential future versions may include:
+- Pydantic Structured Outputs
+- More granular medical embeddings
+- Improved retrieval filtering
+- Patient-specific vector collections
+- More advanced Neo4j medical relationships
+- Better OCR for handwritten documents
+- Persistent doctor accounts
+- Authentication and authorization
+- Persistent chat history
+- Audit logs
+- Multi-hospital support
+- Retrieval evaluation and benchmarking
+- Improved medical document processing
 
--   Pydantic Structured Outputs
--   More granular medical embeddings
--   Better retrieval filtering
--   Patient-specific Qdrant collections
--   Advanced Neo4j medical relationships
--   Persistent doctor accounts
--   Authentication and authorization
--   PostgreSQL for application data
--   Persistent chat history
--   Audit logs
--   Multi-hospital support
--   Better OCR for handwritten documents
--   Evaluation and retrieval benchmarks
-
-------------------------------------------------------------------------
-
-# 👨‍💻 Author
+## 👨‍💻 Author
 
 **Jujare Naresh**
 
-Built as an AI/GenAI project focused on medical document intelligence,
-RAG, knowledge graphs, and conversational AI.
+MedLens is an AI/GenAI project exploring medical document intelligence, RAG, vector databases, knowledge graphs, and conversational AI.
 
-------------------------------------------------------------------------
+---
 
-## ⚠️ Disclaimer
-
-This project is intended for educational, research, and demonstration
-purposes.
-
-Do not use MedLens as the sole basis for clinical decisions, diagnosis,
-medication changes, or treatment decisions.
-
-
-Do not use MedLens as the sole basis for clinical decisions, diagnosis,
-medication changes, or treatment decisions.
-#   M e d d L e n s _ M R I 
- 
- 
+> **MedLens — See every patient's history through one intelligent lens.**

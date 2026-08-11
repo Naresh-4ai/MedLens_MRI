@@ -1,0 +1,15 @@
+streamlit
+openai
+python-dotenv
+langgraph
+langchain
+qdrant-client
+neo4j
+psycopg2-binary
+pydantic
+pymupdf
+pillow
+tiktoken
+numpy
+pandas
+requests

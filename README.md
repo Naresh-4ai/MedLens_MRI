@@ -1,17 +1,21 @@
-# 🩺 MedLens
+## 🩺 MedLens — Medical Report Intelligence
 
-**MedLens (Medical Report Intelligence)** is a medical document
-intelligence and doctor-assistance system built with Python, LangGraph,
-OpenAI, Qdrant, Neo4j, and Streamlit.
+> *“See every patient's history through one intelligent lens.”*
 
-MedLens is designed to process multiple patient medical records, extract
-useful medical information, build a chronological timeline, store
-semantic information in a vector database, maintain relationships in a
-knowledge graph, and provide a conversational assistant for doctors.
+**MedLens** is a prototype medical document intelligence and doctor-assistance system designed to bring a patient's scattered medical records together into one intelligent view.
 
-> **Important:** MedLens is an AI-assisted medical-record retrieval and
-> summarization system. It does not diagnose diseases, prescribe
-> medication, or recommend treatment.
+Built with **Python, LangGraph, OpenAI, Qdrant, Neo4j, and Streamlit**, MedLens processes multiple medical documents, extracts clinically relevant information, builds a chronological view of the patient's history, and combines **semantic retrieval with a medical knowledge graph** to help doctors quickly understand the patient's records.
+
+Instead of treating every report as an isolated PDF, MedLens connects information across **prescriptions, laboratory reports, discharge summaries, radiology reports, consultation notes, medical certificates, and other patient documents**. This allows the doctor to explore a patient's history through a conversational assistant rather than manually searching through every document.
+
+### Prototype
+
+MedLens is currently a **prototype / research-oriented project** focused on exploring how **Agentic AI, RAG, vector databases, and knowledge graphs** can work together to make longitudinal medical records easier to understand and retrieve.
+
+The goal is not to replace existing clinical systems or medical professionals, but to demonstrate how an intelligent layer can sit on top of a patient's existing records and provide **context-aware access to medical history**.
+
+> ⚠️ **Medical Disclaimer:** MedLens is an AI-assisted medical-record retrieval and summarization prototype. It is not a medical device or a substitute for professional clinical judgment. It does not diagnose diseases, prescribe medication, recommend treatment, or make independent clinical decisions.
+
 
 ------------------------------------------------------------------------
 
@@ -670,5 +674,10 @@ purposes.
 
 Do not use MedLens as the sole basis for clinical decisions, diagnosis,
 medication changes, or treatment decisions.
-#   M e d d L e n s _ M R I  
+
+
+Do not use MedLens as the sole basis for clinical decisions, diagnosis,
+medication changes, or treatment decisions.
+#   M e d d L e n s _ M R I 
+ 
  
